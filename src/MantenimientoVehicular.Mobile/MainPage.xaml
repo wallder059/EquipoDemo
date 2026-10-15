@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MantenimientoVehicular.Mobile.Models"
+             x:Class="MantenimientoVehicular.Mobile.MainPage"
+             Title="Historial de mantenimiento"
+             BackgroundColor="#F8FAFC">
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="Historial de mantenimiento" FontSize="24" FontAttributes="Bold" TextColor="#0F172A" />
+                <Label Text="Consulta los servicios realizados y el siguiente recomendado." TextColor="#475569" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="Actualizar" Command="{Binding ReloadCommand}" VerticalOptions="Center" />
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16" Padding="0,4,0,24">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#2563EB" />
+                <Border IsVisible="{Binding HasError}" Stroke="#FCA5A5" Background="#FEF2F2" StrokeShape="RoundRectangle 12" Padding="14">
+                    <Label Text="{Binding ErrorMessage}" TextColor="#991B1B" />
+                </Border>
+                <Border Stroke="#CBD5E1" Background="White" StrokeShape="RoundRectangle 14" Padding="16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Mi vehículo" FontAttributes="Bold" TextColor="#0F172A" />
+                        <Picker Title="Selecciona un vehículo" ItemsSource="{Binding Vehiculos}" ItemDisplayBinding="{Binding Descripcion}" SelectedItem="{Binding VehiculoSeleccionado}" />
+                        <Label Text="{Binding VehiculosMessage}" IsVisible="{Binding HasNoVehicles}" TextColor="#64748B" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border IsVisible="{Binding HasSuggestion}" Stroke="#93C5FD" Background="#EFF6FF" StrokeShape="RoundRectangle 14" Padding="16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Próximo mantenimiento sugerido" FontAttributes="Bold" FontSize="18" TextColor="#1E3A8A" />
+                        <Label Text="{Binding ProximoMantenimiento.TipoServicio}" FontSize="16" TextColor="#1E3A8A" />
+                        <Label Text="{Binding ProximoMantenimiento.Detalle}" TextColor="#334155" />
+                    </VerticalStackLayout>
+                </Border>
+                <VerticalStackLayout IsVisible="{Binding HasHistory}" Spacing="10">
+                    <Label Text="Servicios realizados" FontAttributes="Bold" FontSize="18" TextColor="#0F172A" />
+                    <CollectionView ItemsSource="{Binding Mantenimientos}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Mantenimiento">
+                                <Border Margin="0,0,0,8" Stroke="#E2E8F0" Background="White" StrokeShape="RoundRectangle 12" Padding="14">
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                        <Label Text="{Binding TipoServicio}" FontAttributes="Bold" FontSize="16" TextColor="#0F172A" />
+                                        <Label Grid.Column="1" Text="{Binding KilometrajeTexto}" TextColor="#2563EB" FontAttributes="Bold" />
+                                        <Label Grid.Row="1" Text="{Binding FechaTexto}" TextColor="#64748B" Margin="0,6,0,0" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+                <VerticalStackLayout IsVisible="{Binding ShowEmptyState}" Spacing="8" Padding="24">
+                    <Label Text="Aún no hay mantenimientos registrados" HorizontalTextAlignment="Center" FontSize="18" FontAttributes="Bold" TextColor="#0F172A" />
+                    <Label Text="Cuando se registre un servicio para este vehículo, aparecerá aquí." HorizontalTextAlignment="Center" TextColor="#64748B" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
